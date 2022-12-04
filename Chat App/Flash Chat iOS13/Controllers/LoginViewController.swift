@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class LoginViewController: UIViewController {
 
@@ -15,6 +16,20 @@ class LoginViewController: UIViewController {
     
 
     @IBAction func loginPressed(_ sender: UIButton) {
+        
+        guard let email = emailTextfield.text, let password = passwordTextfield.text else { return }
+        
+        Auth.auth().signIn(withEmail: email, password: password) { [weak self] authResult, error in
+            guard let strongSelf = self else { return }
+            //Do something...
+            if error != nil {
+                print(error!.localizedDescription) //realizo desempaquetado debido a que ya valide si no es nil
+                return
+            }
+            
+            strongSelf.performSegue(withIdentifier: "LoginToChat", sender: strongSelf)
+        }
+        
     }
     
 }
